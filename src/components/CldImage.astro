@@ -1,0 +1,29 @@
+---
+import { Cloudinary } from "@cloudinary/url-gen";
+import { fit, fill } from "@cloudinary/url-gen/actions/resize";
+
+interface Props {
+    src: string;
+    width?: string;
+    height?: string;
+    alt: string;
+    class?: string;
+    active: boolean;
+}
+
+const cld = new Cloudinary({
+    cloud: {
+        cloudName: import.meta.env.CLOUDINARY_CLOUD_NAME,
+    },
+});
+
+const { src, alt, active, ...props } = Astro.props;
+
+let cldImg = cld.image(src).format("auto").quality("auto");
+
+if (src.startsWith("https://")) {
+    cldImg.setDeliveryType("fetch");
+}
+---
+
+<img src={cldImg.toURL()} loading="lazy" {...props} />

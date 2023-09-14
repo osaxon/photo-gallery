@@ -1,0 +1,15 @@
+@import "open-props/animations";
+@import "open-props/easings";
+
+::view-transition-group(*) {
+    animation-timing-function: var(--ease-squish-1);
+    animation-timing-function: var(--ease-in-out-4);
+}
+
+::view-transition-old(*) {
+    animation-duration: 0.1s;
+}
+
+::view-transition-new(*) {
+    animation-duration: 0.5s;
+}

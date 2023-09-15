@@ -2,6 +2,7 @@
 import cloudinary from "../lib/cloudinary";
 import CldImage from "./CldImage.astro";
 import { cn } from "../lib/utils";
+import ResponsiveImg from "./ResponsiveImg.astro";
 const { resources: images } = await cloudinary.v2.search
     .expression(`folder:${import.meta.env.CLOUDINARY_FOLDER}/*`)
     .sort_by("uploaded_at", "desc")
@@ -15,41 +16,45 @@ const selectedImage = images.find(({ filename }) => filename === selected);
 const currentIndex = images.indexOf(selectedImage);
 ---
 
-<div class="@container flex flex-wrap">
-    <p class="text-4xl font-bold text-foreground">{currentIndex}</p>
-    {
-        selectedImage && (
-            <div>
+<div class="flex flex-row flex-wrap">
+    <!-- Full Image -->
+    <div class="w-full">
+        {
+            selectedImage && (
                 <div
                     style={{
-                        viewTransitionName: `images-${selectedImage.filename}`,
+                        viewTransitionName: `images-${selectedImage.public_id}`,
                     }}
+                    class="@container"
                 >
-                    <CldImage
+                    <ResponsiveImg
+                        src={selectedImage.public_id}
                         alt=""
                         active
-                        src={selectedImage.public_id}
-                        class="object-contain max-h-screen w-full h-screen"
                     />
                 </div>
-
-                <div class="flex justify-center gap-2">
-                    {images.map(({ filename, public_id }) => (
-                        <a
-                            class={cn(
-                                "w-1/12",
-                                filename === selected && "border-red-500 border"
-                            )}
-                            style={{
-                                viewTransitionName: `images-${filename}`,
-                            }}
-                            href={`/full/${filename.toString()}`}
-                        >
-                            <CldImage active={false} alt="" src={public_id} />
+            )
+        }
+    </div>
+    <!-- Image grid -->
+    <div class="@container flex border w-full">
+        {
+            images
+                .filter(({ filename }) => filename !== selected)
+                .map(({ filename, public_id }) => (
+                    <div
+                        style={{ viewTransitionName: `images-${public_id}` }}
+                        class="@container @md:w-1/2 @3xl:w-1/4 p-1"
+                    >
+                        <a href={`/full/${filename}`}>
+                            <ResponsiveImg
+                                src={public_id}
+                                alt=""
+                                active={false}
+                            />
                         </a>
-                    ))}
-                </div>
-            </div>
-        )
-    }
+                    </div>
+                ))
+        }
+    </div>
 </div>

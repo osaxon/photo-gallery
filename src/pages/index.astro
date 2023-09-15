@@ -3,6 +3,7 @@ import Layout from "../components/Layout.astro";
 import ImageGrid from "../components/ImageGrid.astro";
 import cloudinary from "../lib/cloudinary";
 import CldImage from "../components/CldImage.astro";
+import ResponsiveImg from "../components/ResponsiveImg.astro";
 const images = await cloudinary.v2.search
     .expression(`folder:${import.meta.env.CLOUDINARY_FOLDER}/*`)
     .sort_by("uploaded_at", "desc")
@@ -11,23 +12,15 @@ const images = await cloudinary.v2.search
 ---
 
 <Layout>
-    <div class="@container flex h-full flex-wrap border">
+    <div class="@container">
         <div class="columns-1 @lg:columns-2 @2xl:columns-3">
             {
                 images.resources.map(({ public_id, filename }) => (
-                    <a
-                        style={{
-                            viewTransitionName: `images-${filename}`,
-                        }}
-                        href={`/full/${filename}`}
-                    >
-                        <CldImage
-                            src={public_id}
-                            alt=""
-                            class="mb-4"
-                            active={false}
-                        />
-                    </a>
+                    <div class="@container w-full @lg:w-1/2 @2xl:w-1/3">
+                        <a href={`/full/${filename}`}>
+                            <ResponsiveImg src={public_id} alt="" active />
+                        </a>
+                    </div>
                 ))
             }
         </div>

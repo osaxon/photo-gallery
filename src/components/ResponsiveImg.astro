@@ -1,0 +1,21 @@
+---
+import CldImage from "./CldImage.astro";
+const { src, alt, active } = Astro.props;
+---
+
+<>
+    <!-- small image -->
+    <CldImage
+        src={src}
+        alt={alt}
+        active={active}
+        class="visible border @lg:hidden border-red-500"
+    />
+    <!-- large image -->
+    <CldImage
+        src={src}
+        alt={alt}
+        active={active}
+        class="hidden @lg:block @lg:h-screen object-contain @lg:w-full border border-green-500"
+    />
+</>
